@@ -37,17 +37,22 @@ export default handleActions({
     ...state,
     input: action.payload,
   }),
-  [CREATE]: (state, action) => {
-    console.log(action);
-    return {
-      ...state,
-      list: state.list.concat({
-        id: state.list.length,
-        name: action.payload,
-        entered: false,
-      })
-    };
-  },
-  [ENTER]: (state, action) => state,
-  [LEAVE]: (state, action) => state,
+  [CREATE]: (state, action) => ({
+    ...state,
+    list: state.list.concat({
+      id: state.list.length,
+      name: action.payload,
+      entered: false,
+    }),
+  }),
+  [ENTER]: (state, action) => ({
+    ...state,
+    list: state.list.map(
+      item => item.id === action.payload ? { ...item, entered: !item.entered} : item
+    ),
+  }),
+  [LEAVE]: (state, action) => ({
+    ...state,
+    list: state.list.filter(item => item.id !== action.payload),
+  }),
 }, initialState);
